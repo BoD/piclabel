@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Common -->
+    <string name="app_name">PicLabel</string>
+    <string name="common_pleaseWait">Please wait…</string>
+    <string name="common_shareWith">Share with</string>
+
+    <!-- Main -->
+    <string name="main_btnTakePicture">Take a picture</string>
+    <string name="main_btnPickFromGallery">Pick from gallery</string>
+    <string name="main_or">" - or -"</string>
+    <string name="main_copyright">Copyright (C) 2013 Benoit \'BoD\' Lubek (BoD@JRAF.org)</string>
+    <string name="main_couldNotTakePicture">Could not call the Camera app.</string>
+    <string name="main_couldNotPickPicture">Could not call the Gallery app.</string>
+    <string name="main_externalSource">Could not read image.</string>
+
+    <!-- Form -->
+    <string name="form_couldNotProcessImage">Could not save image.</string>
+    <string name="form_process_success">Picture saved in the Pic Label album.</string>
+    <string name="form_couldNotDecodeImage">Could not decode image.</string>
+    <string name="form_useLocalDate">Date not found in picture, using current date.</string>
+    <string name="form_useLocalLocation">Location not found in picture, using current location.</string>
+    <string name="form_edtDateTime_hint">Date and time</string>
+    <string name="form_edtLocation_hint">Location</string>
+    <string name="form_btnSave">Save</string>
+    <string name="form_btnShare">Share</string>
+
+</resources>
