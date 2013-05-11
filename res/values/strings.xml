@@ -21,6 +21,7 @@
     <string name="form_couldNotDecodeImage">Could not decode image.</string>
     <string name="form_useLocalDate">Date not found in picture, using current date.</string>
     <string name="form_useLocalLocation">Location not found in picture, using current location.</string>
+    <string name="form_cannotReverseGeocode">Could not retrieve an address from the coordinates.</string>
     <string name="form_edtDateTime_hint">Date and time</string>
     <string name="form_edtLocation_hint">Location</string>
     <string name="form_btnSave">Save</string>

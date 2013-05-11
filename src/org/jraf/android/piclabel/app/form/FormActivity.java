@@ -162,7 +162,11 @@ public class FormActivity extends FragmentActivity {
 
                 mEdtLocation.setText("");
                 mEdtLocation.append(mImageInfo.location);
-                if (mImageInfo.isLocalLocation) mEdtLocation.setError(getString(R.string.form_useLocalLocation));
+                if (mImageInfo.reverseGeocodeProblem) {
+                    mEdtLocation.setError(getString(R.string.form_cannotReverseGeocode));
+                } else if (mImageInfo.isLocalLocation) {
+                    mEdtLocation.setError(getString(R.string.form_useLocalLocation));
+                }
 
                 mImgThumbnail.setImageBitmap(mState.thumbnailBitmap);
                 mEdtDateTime.setEnabled(true);
@@ -179,6 +183,7 @@ public class FormActivity extends FragmentActivity {
         public String location;
         public boolean isLocalDateTime;
         public boolean isLocalLocation;
+        public boolean reverseGeocodeProblem;
     }
 
     protected ImageInfo extractImageInfo(File file) {
@@ -219,7 +224,10 @@ public class FormActivity extends FragmentActivity {
         } else {
             res.location = reverseGeocode(latLon[0], latLon[1]);
         }
-        if (res.location == null) res.location = "";
+        if (res.location == null) {
+            res.reverseGeocodeProblem = true;
+            res.location = "";
+        }
         return res;
     }
 
@@ -246,7 +254,7 @@ public class FormActivity extends FragmentActivity {
         try {
             addresses = geocoder.getFromLocation(lat, lon, 1);
         } catch (Throwable t) {
-            Log.e(TAG, "reverseGeocode Could not reverse geocode", t);
+            Log.w(TAG, "reverseGeocode Could not reverse geocode", t);
             return null;
         }
         if (addresses == null || addresses.isEmpty()) return null;
