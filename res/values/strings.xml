@@ -26,5 +26,7 @@
     <string name="form_edtLocation_hint">Location</string>
     <string name="form_btnSave">Save</string>
     <string name="form_btnShare">Share</string>
+    <string name="form_share_subject">Here\'s a picture for you!</string>
+    <string name="form_share_text">Sent from PicLabel.</string>
 
 </resources>

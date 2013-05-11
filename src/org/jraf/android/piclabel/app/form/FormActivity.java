@@ -326,6 +326,9 @@ public class FormActivity extends FragmentActivity {
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("image/jpeg");
                     shareIntent.putExtra(Intent.EXTRA_STREAM, mUri);
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.form_share_subject));
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.form_share_text));
+                    shareIntent.putExtra("sms_body", getString(R.string.form_share_subject));
                     startActivity(Intent.createChooser(shareIntent, getText(R.string.common_shareWith)));
 
                     finish();
