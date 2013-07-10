@@ -68,8 +68,8 @@ import android.widget.Toast;
 import org.jraf.android.piclabel.Config;
 import org.jraf.android.piclabel.Constants;
 import org.jraf.android.piclabel.R;
-import org.jraf.android.util.async.ProgressDialogAsyncTaskFragment;
-import org.jraf.android.util.async.SimpleAsyncTask;
+import org.jraf.android.util.async.Task;
+import org.jraf.android.util.async.TaskFragment;
 import org.jraf.android.util.bitmap.BitmapUtil;
 import org.jraf.android.util.io.IoUtil;
 import org.jraf.android.util.mediascanner.MediaScannerUtil;
@@ -135,7 +135,7 @@ public class FormActivity extends FragmentActivity {
     }
 
     private void retrieveInfoFromImage() {
-        new SimpleAsyncTask() {
+        new TaskFragment(new Task<FormActivity>() {
             private ImageInfo mImageInfo;
 
             @Override
@@ -145,37 +145,37 @@ public class FormActivity extends FragmentActivity {
             }
 
             @Override
-            protected void onPostExecute(Boolean result) {
-                if (mState.thumbnailBitmap == null) {
-                    Toast.makeText(FormActivity.this, R.string.form_couldNotDecodeImage, Toast.LENGTH_LONG).show();
-                    finish();
+            protected void onPostExecuteOk() {
+                if (getActivity().mState.thumbnailBitmap == null) {
+                    Toast.makeText(getActivity(), R.string.form_couldNotDecodeImage, Toast.LENGTH_LONG).show();
+                    getActivity().finish();
                     return;
                 }
 
-                Animation anim = AnimationUtils.loadAnimation(FormActivity.this, android.R.anim.fade_out);
-                mConLoading.startAnimation(anim);
-                mConLoading.setVisibility(View.GONE);
+                Animation anim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+                getActivity().mConLoading.startAnimation(anim);
+                getActivity().mConLoading.setVisibility(View.GONE);
 
-                mEdtDateTime.setText("");
-                mEdtDateTime.append(mImageInfo.dateTime);
-                if (mImageInfo.isLocalDateTime) mEdtDateTime.setError(getString(R.string.form_useLocalDate));
+                getActivity().mEdtDateTime.setText("");
+                getActivity().mEdtDateTime.append(mImageInfo.dateTime);
+                if (mImageInfo.isLocalDateTime) getActivity().mEdtDateTime.setError(getActivity().getString(R.string.form_useLocalDate));
 
-                mEdtLocation.setText("");
-                mEdtLocation.append(mImageInfo.location);
+                getActivity().mEdtLocation.setText("");
+                getActivity().mEdtLocation.append(mImageInfo.location);
                 if (mImageInfo.reverseGeocodeProblem) {
-                    mEdtLocation.setError(getString(R.string.form_cannotReverseGeocode));
+                    getActivity().mEdtLocation.setError(getActivity().getString(R.string.form_cannotReverseGeocode));
                 } else if (mImageInfo.isLocalLocation) {
-                    mEdtLocation.setError(getString(R.string.form_useLocalLocation));
+                    getActivity().mEdtLocation.setError(getActivity().getString(R.string.form_useLocalLocation));
                 }
 
-                mImgThumbnail.setImageBitmap(mState.thumbnailBitmap);
-                mEdtDateTime.setEnabled(true);
-                mEdtLocation.setEnabled(true);
-                mSpnFont.setEnabled(true);
-                mBtnSave.setEnabled(true);
-                mBtnShare.setEnabled(true);
+                getActivity().mImgThumbnail.setImageBitmap(mState.thumbnailBitmap);
+                getActivity().mEdtDateTime.setEnabled(true);
+                getActivity().mEdtLocation.setEnabled(true);
+                getActivity().mSpnFont.setEnabled(true);
+                getActivity().mBtnSave.setEnabled(true);
+                getActivity().mBtnShare.setEnabled(true);
             }
-        }.execute();
+        }).execute(getSupportFragmentManager());
     }
 
     private static class ImageInfo {
@@ -288,7 +288,7 @@ public class FormActivity extends FragmentActivity {
     private final OnClickListener mSaveOnClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            new ProgressDialogAsyncTaskFragment() {
+            new TaskFragment(new Task<FormActivity>() {
                 @Override
                 protected void doInBackground() throws Exception {
                     Uri uri = processAndSaveImage();
@@ -298,9 +298,9 @@ public class FormActivity extends FragmentActivity {
                 @Override
                 protected void onPostExecuteOk() {
                     super.onPostExecuteOk();
-                    finish();
+                    getActivity().finish();
                 }
-            }.toastOk(R.string.form_process_success).toastFail(R.string.form_couldNotProcessImage).execute(getSupportFragmentManager());
+            }.toastOk(R.string.form_process_success).toastFail(R.string.form_couldNotProcessImage)).execute(getSupportFragmentManager());
         }
     };
 
@@ -312,7 +312,7 @@ public class FormActivity extends FragmentActivity {
     private final OnClickListener mShareOnClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            new ProgressDialogAsyncTaskFragment() {
+            new TaskFragment(new Task<FormActivity>() {
                 private Uri mUri;
 
                 @Override
@@ -326,14 +326,14 @@ public class FormActivity extends FragmentActivity {
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("image/jpeg");
                     shareIntent.putExtra(Intent.EXTRA_STREAM, mUri);
-                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.form_share_subject));
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.form_share_text));
-                    shareIntent.putExtra("sms_body", getString(R.string.form_share_subject));
-                    startActivity(Intent.createChooser(shareIntent, getText(R.string.common_shareWith)));
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, getActivity().getString(R.string.form_share_subject));
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, getActivity().getString(R.string.form_share_text));
+                    shareIntent.putExtra("sms_body", getActivity().getString(R.string.form_share_subject));
+                    getActivity().startActivity(Intent.createChooser(shareIntent, getActivity().getText(R.string.common_shareWith)));
 
-                    finish();
+                    getActivity().finish();
                 }
-            }.toastOk(R.string.form_process_success).toastFail(R.string.form_couldNotProcessImage).execute(getSupportFragmentManager());
+            }.toastOk(R.string.form_process_success).toastFail(R.string.form_couldNotProcessImage)).execute(getSupportFragmentManager());
         }
     };
 
